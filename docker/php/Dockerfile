@@ -1,7 +1,3 @@
-FROM php:7.2-apache
-RUN apt-get update  \
+FROM php:8.0-apache
+RUN apt-get update && apt-get install -y libonig-dev \
   && docker-php-ext-install pdo_mysql mysqli mbstring
-
-WORKDIR /var/www/html
-
-EXPOSE 80

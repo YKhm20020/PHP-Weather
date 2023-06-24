@@ -4,15 +4,17 @@ services:
     build:
       context: ./docker/php
       dockerfile: Dockerfile
+    container_name: php-container
     image: php:7.3-apache
     volumes:
       - ./src:/var/www/html
     ports:
-      - "80:80"
+      - 8080:80
     depends_on:
       - db
 
   db:
+    container_name: mysql-container
     image: mysql:8.0
     build:
       context: ./docker/mysql
@@ -20,7 +22,12 @@ services:
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - '${FORWARD_DB_PORT}:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=pass
-      - TZ=Asia/Tokyo
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_HOST: '${DB_HOST}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_ROOT_HOST: '%'
+      TZ: '${TZ}'
